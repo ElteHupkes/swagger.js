@@ -354,6 +354,14 @@ class SwaggerOperation
 
     @errorResponses = @errorResponses || []
 
+    # Create class signatures for error responses
+    for errResp in @errorResponses
+      if (errResp.responseClass?.toLowerCase() is 'void')
+        errResp.responseClass = undefined
+      if errResp.responseClass?
+        errResp.responseClassSignature = @getSignature(errResp.responseClass, @resource.models)
+        errResp.responseSampleJSON = @getSampleJSON(errResp.responseClass, @resource.models)
+    
     for parameter in @parameters
       # Path params do not have a name, set the name to the path if name is n/a
       parameter.name = parameter.name || parameter.dataType
